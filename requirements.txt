@@ -8,7 +8,7 @@ Flask==2.0.1
 Flask-GraphQL==2.0.1
 future==0.18.2
 graphene==2.1.9
-graphene-django==2.15.0
+graphene-django>=3
 graphene-sqlalchemy==2.3.0
 graphql-core==2.3.2
 graphql-relay==2.0.1
