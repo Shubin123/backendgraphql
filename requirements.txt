@@ -1,3 +1,4 @@
+django-graphql-jwt==0.3.4
 html5lib==1.1
 typing-extensions==4.0.1
 requests-toolbelt==0.7.1
