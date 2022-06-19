@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-r3314envafpx!srfpyl*9+qqd=^vv+0sq03df_wx%9a42_utma
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["authoreteh.herokuapp.com", "127.0.0.1"]
 
 
 # Application definition
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 
     "graphene_django",
     "applet.modelstore",
-    'corsheaders',
+    # 'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
         
-    'corsheaders.middleware.CorsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
 
 ]
 
@@ -77,12 +77,12 @@ MIDDLEWARE = [
 # 'x-requested-with',
 # ]
 
-CORS_ALLOWED_ORIGINS = [
-# "https://domain.com",
-# "https://api.domain.com",
-"http://localhost:8080",
-"https://127.0.0.1:5500",
-]
+# CORS_ALLOWED_ORIGINS = [
+# # "https://domain.com",
+# # "https://api.domain.com",
+# "http://localhost:8080",
+# "https://127.0.0.1:5500",
+# ]
 
 ROOT_URLCONF = 'applet.urls'
 
@@ -111,7 +111,7 @@ WSGI_APPLICATION = 'applet.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': str(BASE_DIR / 'db.sqlite3'),
     }
 }
 
@@ -151,8 +151,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
+import os
+STATIC_ROOT= os.path.join(BASE_DIR, 'staticfiles')
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
