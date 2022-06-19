@@ -1,5 +1,4 @@
 Django<=3.2
-django-cors-headers==3.13.0
 graphene==2.1.9
 graphene-django==2.0.0
 graphene-sqlalchemy==2.3.0

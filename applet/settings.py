@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 
     "graphene_django",
     "applet.modelstore",
-    'corsheaders',
+    # 'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
         
-    'corsheaders.middleware.CorsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
 
 ]
 
@@ -77,12 +77,12 @@ MIDDLEWARE = [
 # 'x-requested-with',
 # ]
 
-CORS_ALLOWED_ORIGINS = [
-# "https://domain.com",
-# "https://api.domain.com",
-"http://localhost:8080",
-"https://127.0.0.1:5500",
-]
+# CORS_ALLOWED_ORIGINS = [
+# # "https://domain.com",
+# # "https://api.domain.com",
+# "http://localhost:8080",
+# "https://127.0.0.1:5500",
+# ]
 
 ROOT_URLCONF = 'applet.urls'
 
