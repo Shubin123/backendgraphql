@@ -1,15 +1,8 @@
 Django==4.0.5
 django-cors-headers==3.13.0
-downloader-cli==0.3.2.post1
-entrypoints==0.3
-ffmpeg-python==0.2.0
-filelock==3.0.12
-Flask==2.0.1
-Flask-GraphQL==2.0.1
-future==0.18.2
 graphene==2.1.9
-graphene-django>=3
+graphene-django>=3.0.0b1
 graphene-sqlalchemy==2.3.0
 graphql-core==2.3.2
-graphql-relay==2.0.1
 graphql-server-core==1.2.0
+graphql-relay==2.0.1
