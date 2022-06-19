@@ -1,4 +1,5 @@
-Django<=3.2
+six
+Django<3.0
 graphene==2.1.9
 graphene-django==2.0.0
 graphene-sqlalchemy==2.3.0
