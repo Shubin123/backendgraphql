@@ -1,7 +1,9 @@
 # cookbook/schema.py
 from pyexpat import model
+from typing_extensions import Required
 import graphene
 from graphene_django import DjangoObjectType
+from graphql import GraphQLError
 from hypothesis import note
 from requests_toolbelt import user_agent
 from applet import modelstore
@@ -46,26 +48,32 @@ class editUserMutation(graphene.Mutation):
     usermodel = graphene.Field(ModelType)
     @classmethod
     def mutate(cls, root, info, id, name, notes, categoryname):
-        """we need to check pk category name exist -> able to edit"""
-        usermodel = Item.objects.get(pk=id)
-        usermodel.name = name
-        usermodel.notes = notes
-        usermodel.category = Category.objects.get(pk=categoryname)
-        usermodel.save()
-        return editUserMutation(usermodel=usermodel)
+        """we need to check pk id exists and username does not exist -> able to edit"""
+        if not Item.objects.filter(pk=id).exists():
+            raise GraphQLError("user with this id does not exist")
+        else:
+            usermodel = Item.objects.get(pk=id)
+            usermodel.name = name
+            usermodel.notes = notes
+            usermodel.category = Category.objects.get(pk=categoryname)
+            usermodel.save()
+            return editUserMutation(usermodel=usermodel)
 
 class createUserMutation(graphene.Mutation):
     class Arguments:
         name = graphene.String(required=True)
         notes = graphene.String(required=True)
-        category = graphene.Int(required=True)
+        categoryid = graphene.Int()
     usermodel = graphene.Field(ModelType)
     @classmethod
-    def mutate(cls, root, info, name, notes, category):
-        """we need to check pk category name does not exist -> able to create"""
-        usermodel = Item(name=name, notes=notes, category=Category.objects.get(pk=category))
-        usermodel.save()
-        return createUserMutation(usermodel=usermodel)
+    def mutate(cls, root, info, name, notes, categoryid):
+        """we need to check user does exist with the same name-> able to create"""
+        if Item.objects.filter(name=name).exists():
+            raise GraphQLError('account already exists with the same name')
+        else:
+            usermodel = Item(name=name, notes=notes, category=Category.objects.get(pk=categoryid))
+            usermodel.save()
+            return createUserMutation(usermodel=usermodel)
 
 class deleteUserMutation(graphene.Mutation):
     class Arguments:
@@ -73,10 +81,13 @@ class deleteUserMutation(graphene.Mutation):
     usermodel = graphene.Field(ModelType)
     @classmethod 
     def mutate(cls, root, info, userid):
-        """we need to check pk userid exist -> able to delete"""
-        usermodel = Item.objects.get(pk=userid)
-        usermodel.delete()
-        return deleteUserMutation(usermodel=usermodel)
+        """check pk userid exist -> able to delete"""
+        if Item.objects.filter(pk=userid).exists():
+            usermodel = Item.objects.get(pk=userid)
+            usermodel.delete()
+            return deleteUserMutation(usermodel=usermodel)
+        else:
+            raise GraphQLError('user does not exist')
 
 # category mutations 
 class createCategoryMutation(graphene.Mutation):
@@ -88,9 +99,14 @@ class createCategoryMutation(graphene.Mutation):
     categorymodel = graphene.Field(CategoryType)
     @classmethod
     def mutate(cls, root, info, catagory_id, name):
-        categorymodel = Category(pk=catagory_id, name=name)
-        categorymodel.save()
-        return createCategoryMutation(categorymodel=categorymodel)
+        """check category does not exist with the same name-> able to create"""
+        if Category.objects.filter(name=name).exists():
+            raise GraphQLError('category already exists with the same name')
+        else:
+            categorymodel = Category(pk=catagory_id, name=name)
+            categorymodel.save()
+            return createCategoryMutation(categorymodel=categorymodel)
+
 class deleteCategoryMutation(graphene.Mutation):
     """deletes a category by name"""
     class Arguments:
@@ -98,9 +114,12 @@ class deleteCategoryMutation(graphene.Mutation):
     categorymodel = graphene.Field(CategoryType)
     @classmethod    
     def mutate(cls, root, info, catagory_id):
-        categorymodel = Category.objects.get(pk=catagory_id)
-        categorymodel.delete()
-        return deleteCategoryMutation(categorymodel=categorymodel)
+        if Category.objects.filter(pk=catagory_id).exists():
+            categorymodel = Category.objects.get(pk=catagory_id)
+            categorymodel.delete()
+            return deleteCategoryMutation(categorymodel=categorymodel)
+        else:
+            raise GraphQLError('category not found')
 
 class Mutation(graphene.ObjectType):
     # pre:
