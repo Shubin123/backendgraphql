@@ -33,7 +33,8 @@ class Query(graphene.ObjectType):
     all_categorys = graphene.List(CategoryType)
     all_models = graphene.List(ModelType)
     category_by_name = graphene.Field(CategoryType, name=graphene.String(required=True)) # make this main query method
-
+    
+    
     def resolve_all_categorys(root, info):
         return Category.objects.all()
 
@@ -44,7 +45,6 @@ class Query(graphene.ObjectType):
             return Category.objects.get(name=name)
         except Category.DoesNotExist:
             return None
-
 
 
 # items mutations
@@ -132,11 +132,26 @@ class deleteCategoryMutation(graphene.Mutation):
             return deleteCategoryMutation(categorymodel=categorymodel)
         else:
             raise GraphQLError('category not found')
+
+class checkUserMutation(graphene.Mutation):
+    class Arguments:
+        username = graphene.String(required=True)
+        notes = graphene.String(required=True)
+    usermodel = graphene.Field(ModelType)
+    @classmethod
+    def mutate(cls, root, info, username, notes):
+        if Item.objects.filter(name=username).exists():
+            a =  Item.objects.get(name=username)
+            if a.notes == notes:
+                raise GraphQLError('yay')
+        else:
+            raise GraphQLError('account doe not exists with the same name')
+
 class Mutation(graphene.ObjectType):
     # pre:
     create_catagory = createCategoryMutation.Field()
     create_user = createUserMutation.Field()
-    
+    check_user = checkUserMutation.Field()
     # post:
     delete_category = deleteCategoryMutation.Field()
     edit_user = editUserMutation.Field()
