@@ -6,6 +6,7 @@ import graphene
 from graphene_django import DjangoObjectType
 from graphql import GraphQLError
 from hypothesis import note
+from numpy import require
 from requests_toolbelt import user_agent
 from ..models import Category, Item
 
@@ -17,8 +18,17 @@ class CategoryType(DjangoObjectType):
 class ModelType(DjangoObjectType):
     class Meta:
         model = Item
-        fields = ("id", "name", "notes", "category")
+        fields = ("password", "name", "notes", "category")
 
+class userQuery(graphene.AbstractType):
+    me = graphene.Field(ModelType)
+    users = graphene.List(ModelType)
+
+    def resolve_me(self, info):
+        user = info.context.user
+        if user.is_anonymous:
+            raise GraphQLError("Not logged in!")
+        return user
 class Query(graphene.ObjectType):
     all_categorys = graphene.List(CategoryType)
     all_models = graphene.List(ModelType)
@@ -41,44 +51,45 @@ class Query(graphene.ObjectType):
 
 class createUserMutation(graphene.Mutation):
     class Arguments:
-        name = graphene.String(required=True)
+        username = graphene.String(required=True)
         notes = graphene.String(required=True)
-        categoryid = graphene.Int()
+        categoryid = graphene.Int(required=True)
+        password = graphene.String(required=True)
     usermodel = graphene.Field(ModelType)
     @classmethod
-    def mutate(cls, root, info, name, notes, categoryid):
+    def mutate(cls, root, info, password, username, notes, categoryid):
         """we need to check user does exist with the same name-> able to create"""
-        if Item.objects.filter(name=name).exists():
+        if Item.objects.filter(name=username).exists():
             raise GraphQLError('account already exists with the same name')
         else:
-            usermodel = Item(name=name, notes=notes, category=Category.objects.get(pk=categoryid))
+            usermodel = Item(password = password, name=username, notes=notes, category=Category.objects.get(pk=categoryid))
             usermodel.save()
             return createUserMutation(usermodel=usermodel)
 
 class editUserMutation(graphene.Mutation):
     class Arguments:
-        id = graphene.Int(required=True)
+        password = graphene.String(required=True)
         name = graphene.String(required=True)
         notes = graphene.String(required=True)
-        categoryname = graphene.Int(required=True)
+        categoryID = graphene.Int(required=True)
         
     usermodel = graphene.Field(ModelType)
     @classmethod
-    def mutate(cls, root, info, id, name, notes, categoryname):
-        """we need to check pk id exists and username does not exist -> able to edit"""
-        if not Item.objects.filter(pk=id).exists():
-            raise GraphQLError("user with this id does not exist")
+    def mutate(cls, root, info, password, name, notes, categoryID):
+        """we need to check name exists and  does not exist -> able to edit"""
+        if not Item.objects.filter(pk=password).exists():
+            raise GraphQLError("user with this password does not exist")
         else:
-            usermodel = Item.objects.get(pk=id)
+            usermodel = Item.objects.get(pk=password)
             usermodel.name = name
             usermodel.notes = notes
-            usermodel.category = Category.objects.get(pk=categoryname)
+            usermodel.category = Category.objects.get(pk=categoryID)
             usermodel.save()
             return editUserMutation(usermodel=usermodel)
 
 class deleteUserMutation(graphene.Mutation):
     class Arguments:
-        userid = graphene.Int(required=True)
+        password = graphene.String(required=True)
     usermodel = graphene.Field(ModelType)
     @classmethod 
     def mutate(cls, root, info, userid):
@@ -131,4 +142,4 @@ class Mutation(graphene.ObjectType):
     edit_user = editUserMutation.Field()
     delete_user = deleteUserMutation.Field()
     
-# schema = graphene.Schema(query=Query, mutation=Mutation) 
+# schema = graphene.Schema(query=Query, mutation=Mutation) schema now initialized on proxy layer
