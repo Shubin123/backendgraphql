@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
-<head>
+    <head>
+        <title>Example</title>
 
-</head>
-<body>
-    <script type="importmap">
+    </head>
+    <body>
+      <script type="importmap">
         {
           "imports": {
             "axios": "https://ga.jspm.io/npm:axios@1.0.0-alpha.1/index.js"
@@ -19,31 +20,85 @@
           }
         }
         </script>
-        <script type="module">
+
+
       
+        <p>This is an example of a simple HTML page with one paragraph.</p>
+
+      
+        
+		<script type="module">
+       
+
+      function clicked() {
+
+        var inputVal = document.getElementById("input").value;
+        var namein = document.getElementById("input2").value;
+        // call server here
+        // grab return
+
+        console.log(inputVal);
+        console.log(fuck(inputVal, namein));
+      }
+			
+      window.clicked = clicked;
+      
+     
+  
       import axios,* as others from "axios";
-      function fuck(){
-    axios({
-      url: 'https://fast-temple-02978.herokuapp.com/http://127.0.0.1:8000/graphql',
-      origin: 'http://localhost:8000',
-      method: 'post',
-      data: {
-        query: `      
-        {allModels{
-  name
-}}
-          `
+      function fuck(inputval, nameinput){
+        var a = inputval.toString()
+        
+     
+            axios({
+            url: 'https://fast-temple-02978.herokuapp.com/https://authoreteh.herokuapp.com/graphql',
+            method: 'post',
+            data: {
+              query:  
+                  `mutation checkUser($username: String!, $notes: String!) {
+            checkUser(username: $username, notes: $notes){
+              usermodel{
+                name
+              }
+            }
+          }`
+            ,
+            variables: {
+              username: nameinput,
+              notes: a
+            },
+          
+          }
+        
+        }).then((result) => {
+            console.log(result.data.errors[0].message);
+            // console.log(result.data)
+          });
       }
-    }).then((result) => {
-      
-      console.log(result.data)
-    });
 
-      }
-      fuck();
 
-      
+
+
+
     </script>
-</body>
+		<button onclick="window.clicked()">Click me</button>
+ 
+     
+
+
+
+
+		<input id='input'> password</input>
+		<input id='input2'> username</input>
+
+
+
+
+7
+
+    </body>
 </html>
+
+
+
 

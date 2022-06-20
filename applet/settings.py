@@ -135,16 +135,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 GRAPHENE = {
-    "SCHEMA": ["applet.schema.schema.schema"],
-    'MIDDLEWARE': [
-        'graphql_jwt.middleware.JSONWebTokenMiddleware',
-    ],
+    "SCHEMA": "applet.schema.schema"
 }
-
-AUTHENTICATION_BACKENDS = [
-    'graphql_jwt.backends.JSONWebTokenBackend',
-    'django.contrib.auth.backends.ModelBackend',
-]
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
