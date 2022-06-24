@@ -10,8 +10,9 @@ class Category(models.Model):
         return self.name
 
 class Item(models.Model):
-    name = models.CharField(max_length=100)
+    username = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
+    
     notes = models.TextField()
     category = models.ForeignKey(
         Category, related_name="items", on_delete=models.CASCADE

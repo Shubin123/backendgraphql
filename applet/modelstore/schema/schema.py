@@ -18,7 +18,7 @@ class CategoryType(DjangoObjectType):
 class ModelType(DjangoObjectType):
     class Meta:
         model = Item
-        fields = ("password", "name", "notes", "category")
+        fields = ("password", "username", "notes", "category")
 
 class userQuery(graphene.AbstractType):
     me = graphene.Field(ModelType)
@@ -32,7 +32,7 @@ class userQuery(graphene.AbstractType):
 class Query(graphene.ObjectType):
     all_categorys = graphene.List(CategoryType)
     all_models = graphene.List(ModelType)
-    category_by_name = graphene.Field(CategoryType, name=graphene.String(required=True)) # make this main query method
+    category_by_name = graphene.Field(CategoryType, username=graphene.String(required=True)) # make this main query method
     
     
     def resolve_all_categorys(root, info):
@@ -40,9 +40,9 @@ class Query(graphene.ObjectType):
 
     def resolve_all_models(root, info):
         return Item.objects.all()
-    def resolve_category_by_name(root, info, name):
+    def resolve_category_by_name(root, info, username):
         try:
-            return Category.objects.get(name=name)
+            return Category.objects.get(username=username)
         except Category.DoesNotExist:
             return None
 
@@ -59,29 +59,29 @@ class createUserMutation(graphene.Mutation):
     @classmethod
     def mutate(cls, root, info, password, username, notes, categoryid):
         """we need to check user does exist with the same name-> able to create"""
-        if Item.objects.filter(name=username).exists():
+        if Item.objects.filter(username=username).exists():
             raise GraphQLError('account already exists with the same name')
         else:
-            usermodel = Item(password = password, name=username, notes=notes, category=Category.objects.get(pk=categoryid))
+            usermodel = Item(password = password, username=username, notes=notes, category=Category.objects.get(pk=categoryid))
             usermodel.save()
             return createUserMutation(usermodel=usermodel)
 
 class editUserMutation(graphene.Mutation):
     class Arguments:
         password = graphene.String(required=True)
-        name = graphene.String(required=True)
+        username = graphene.String(required=True)
         notes = graphene.String(required=True)
         categoryID = graphene.Int(required=True)
         
     usermodel = graphene.Field(ModelType)
     @classmethod
-    def mutate(cls, root, info, password, name, notes, categoryID):
+    def mutate(cls, root, info, password, username, notes, categoryID):
         """we need to check name exists and  does not exist -> able to edit"""
         if not Item.objects.filter(pk=password).exists():
             raise GraphQLError("user with this password does not exist")
         else:
             usermodel = Item.objects.get(pk=password)
-            usermodel.name = name
+            usermodel.username = username
             usermodel.notes = notes
             usermodel.category = Category.objects.get(pk=categoryID)
             usermodel.save()
@@ -89,13 +89,16 @@ class editUserMutation(graphene.Mutation):
 
 class deleteUserMutation(graphene.Mutation):
     class Arguments:
-        password = graphene.String(required=True)
+        # password = graphene.String(required=True)
+        username = graphene.String(required=True)
     usermodel = graphene.Field(ModelType)
     @classmethod 
-    def mutate(cls, root, info, userid):
+    def mutate(cls, root, info, username):
         """check pk userid exist -> able to delete"""
-        if Item.objects.filter(pk=userid).exists():
-            usermodel = Item.objects.get(pk=userid)
+        if Item.objects.filter(username=username).exists():
+            # check user passwored maches the one for the user  
+        
+            usermodel = Item.objects.get(username=username)
             usermodel.delete()
             return deleteUserMutation(usermodel=usermodel)
         else:
