@@ -37,31 +37,26 @@
         // call server here
         // grab return
 
-        console.log(inputVal);
+
         console.log(fuck(inputVal, namein));
       }
 			
       window.clicked = clicked;
       
-     
+
   
       import axios,* as others from "axios";
       function fuck(inputval, nameinput){
         var a = inputval.toString()
-        
-     
+
             axios({
-            url: 'https://fast-temple-02978.herokuapp.com/https://authoreteh.herokuapp.com/graphql',
+            url: 'http://127.0.0.1:8000/graphql',
             method: 'post',
             data: {
               query:  
-                  `mutation checkUser($username: String!, $notes: String!) {
-            checkUser(username: $username, notes: $notes){
-              usermodel{
-                name
-              }
-            }
-          }`
+                  `{users{edges{node{
+	id username, dateJoined, email
+}}}}`
             ,
             variables: {
               username: nameinput,
@@ -69,10 +64,10 @@
             },
           
           }
-        
+
         }).then((result) => {
-            console.log(result.data.errors[0].message);
-            // console.log(result.data)
+            // console.log(result["data"]]);
+            console.log(result["data"]["data"]["users"]["edges"][0]["node"]["username"]);
           });
       }
 
@@ -94,7 +89,7 @@
 
 
 
-7
+
 
     </body>
 </html>
