@@ -21,7 +21,7 @@ SECRET_KEY = 'django-insecure-r3314envafpx!srfpyl*9+qqd=^vv+0sq03df_wx%9a42_utma
 DEBUG = True
 
 ALLOWED_HOSTS = ["authoreteh.herokuapp.com", "127.0.0.1", "127.0.0.1:8000",
-                 "127.0.0.1:8080/graphql", ]
+                 "127.0.0.1:8000/graphql", ]
 
 # Application definition
 

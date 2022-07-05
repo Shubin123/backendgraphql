@@ -22,72 +22,121 @@
         </script>
 
 
-      
-        <p>This is an example of a simple HTML page with one paragraph.</p>
-
-      
-        
-		<script type="module">
-       
-
-      function clicked() {
-
-        var inputVal = document.getElementById("input").value;
-        var namein = document.getElementById("input2").value;
-        // call server here
-        // grab return
 
 
-        console.log(fuck(inputVal, namein));
+
+
+      <script type="module">
+
+        // clicked1 -> registration
+      function clicked1() {
+
+        var passwordinput = document.getElementById("input").value;
+        var usernameinput = document.getElementById("input2").value;
+        var emailinput = document.getElementById("input3").value;
+
+        console.log(registration(passwordinput, usernameinput, emailinput));
       }
-			
-      window.clicked = clicked;
-      
 
-  
+      window.clicked1 = clicked1;
+
+      // clicked2 -> verification
+
+  function clicked2() {
+
+        var token = document.getElementById("input4").value;
+        console.log(verification(token));
+      }
+
+      window.clicked2 = clicked2;
+
+
+
       import axios,* as others from "axios";
-      function fuck(inputval, nameinput){
-        var a = inputval.toString()
+
+      function registration(password, username, email){
+        var convertemail = email.toString()
+        var convertuser = username.toString()
+        var convertpass = password.toString()
+        
 
             axios({
-            url: 'https://authoreteh.herokuapp.com/graphql',
+            url: 'http://127.0.0.1:8000/graphql',
             method: 'post',
             data: {
-              query:  
-                  `{users{edges{node{
-	id username, dateJoined, email
-}}}}`
-            ,
-            variables: {
-              username: nameinput,
-              notes: a
-            },
-          
-          }
+              query:
+              `mutation register($emailed: String!, $usernamed: String!, $password1: String!, $password2: String!) {
+  register(email: $emailed username: $usernamed, password1: $password1, password2: $password2) {
+    success
+    errors
+    refreshToken
+    token
+    }
+  }
+`,
+  variables: {
+    emailed: convertemail,
+    usernamed: convertuser,
+    password1: convertpass,
+    password2: convertpass
+  }},
 
         }).then((result) => {
             // console.log(result["data"]]);
-            console.log(result["data"]["data"]["users"]["edges"][0]["node"]["id"]);
+            console.log(result);
+            console.log(result["data"]["data"])
+            console.log(result["data"]["data"]["register"]["errors"]);
+          });
+}
+
+
+
+
+      function verification(tokeninput){
+        var token = tokeninput.toString()
+        
+
+            axios({
+            url: 'http://127.0.0.1:8000/graphql',
+            method: 'post',
+            data: {
+              query:
+              `mutation verifyAccount($tokenize: String!) {
+                verifyAccount(token: $tokenize) {
+    success
+    errors
+    }
+  }
+`,
+  variables: {
+    tokenize: token
+  }},
+
+        }).then((result) => {
+            // console.log(result["data"]]);
+            console.log(result);
+            console.log(result["data"]["data"])
+            console.log(result["data"]["data"]["register"]["errors"]);
           });
       }
 
 
 
 
-
     </script>
-		<button onclick="window.clicked()">Click me</button>
- 
-     
+      <p>registration test</p>
+
+		<button onclick="window.clicked1()">Click me</button>
+
+		<input id='input'> password </input>
+		<input id='input2'> username </input>
+      <input id='input3'> email </input>
+
+<p>verification test</p>
+<button onclick="window.clicked2()">Click me</button>
 
 
-
-
-		<input id='input'> password</input>
-		<input id='input2'> username</input>
-
-
-
+		<input id='input4'> token </input>
 
 
 
