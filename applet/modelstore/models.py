@@ -1,20 +1,10 @@
+
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
+class User(AbstractUser):
 
+    email = models.EmailField(blank=False, max_length=254, verbose_name="email address")
 
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-class Item(models.Model):
-    name = models.CharField(max_length=100)
-    notes = models.TextField()
-    category = models.ForeignKey(
-        Category, related_name="items", on_delete=models.CASCADE
-    )
-
-    def __str__(self):
-        return self.name
+    USERNAME_FIELD = "username"   # e.g: "username", "email"
+    EMAIL_FIELD = "email"         # e.g: "email", "primary_email"

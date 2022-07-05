@@ -1,6 +1,0 @@
-[   {"model": "modelstore.category", "pk": 1, "fields": {"name": "users"}},
-    {"model": "modelstore.category", "pk": 2, "fields": {"name": "Meat"}}, 
-    {"model": "modelstore.item", "pk": 1, "fields": {"name": "user1", "notes": "storepassword", "category": 1}},
-    {"model": "modelstore.item", "pk": 2, "fields": {"name": "user2", "notes": "storedpass", "category": 1}}, 
-    {"model": "modelstore.item", "pk": 3, "fields": {"name": "Beef", "notes": "Much like milk, this comes from a cow", "category": 2}}, 
-    {"model": "modelstore.item", "pk": 4, "fields": {"name": "Chicken", "notes": "Definitely doesn't come from a cow", "category": 2}}]

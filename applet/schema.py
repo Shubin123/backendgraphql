@@ -1,13 +1,29 @@
 #  outer schema located in root (auth lair connected to inner schema)
+
+# import applet.modelstore.schema.schema as super
 import graphene
-import applet.modelstore.schema.schema
-import graphql_jwt
-class Query(applet.modelstore.schema.schema.Query, graphene.ObjectType):
+
+
+
+from graphql_auth.schema import UserQuery
+from graphql_auth import mutations
+
+class AuthMutation(graphene.ObjectType):
+    register = mutations.Register.Field()
+    verify_account = mutations.VerifyAccount.Field()
+    token_auth = mutations.ObtainJSONWebToken.Field()
+    update_account = mutations.UpdateAccount.Field()
+    password_reset = mutations.PasswordReset.Field()
+
+
+class Query(UserQuery, graphene.ObjectType):
     pass
 
-class Mutation(applet.modelstore.schema.schema.Mutation, graphene.ObjectType):
-    token_auth = graphql_jwt.ObtainJSONWebToken.Field()
-    verify_token = graphql_jwt.Verify.Field()
-    refresh_token = graphql_jwt.Refresh.Field()
+class Mutation(AuthMutation,
+# super.Mutation,
+graphene.ObjectType):
+   pass
 
-schema = graphene.Schema(query=Query, mutation=Mutation)
+schema = graphene.Schema(query=Query,
+                         mutation=Mutation
+)
