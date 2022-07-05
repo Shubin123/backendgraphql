@@ -50,7 +50,7 @@
         var a = inputval.toString()
 
             axios({
-            url: 'http://127.0.0.1:8000/graphql',
+            url: 'https://authoreteh.herokuapp.com/graphql',
             method: 'post',
             data: {
               query:  
@@ -67,7 +67,7 @@
 
         }).then((result) => {
             // console.log(result["data"]]);
-            console.log(result["data"]["data"]["users"]["edges"][0]["node"]["username"]);
+            console.log(result["data"]["data"]["users"]["edges"][0]["node"]["id"]);
           });
       }
 
