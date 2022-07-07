@@ -13,8 +13,11 @@ class AuthMutation(graphene.ObjectType):
     verify_account = mutations.VerifyAccount.Field()
     token_auth = mutations.ObtainJSONWebToken.Field()
     update_account = mutations.UpdateAccount.Field()
+    password_change = mutations.PasswordChange.Field()
     password_reset = mutations.PasswordReset.Field()
-
+    delete_account = mutations.DeleteAccount.Field()
+    resend_activation_email = mutations.ResendActivationEmail.Field()
+    send_password_reset_email = mutations.SendPasswordResetEmail.Field()
 
 class Query(UserQuery, graphene.ObjectType):
     pass
