@@ -5,7 +5,7 @@ typing-extensions==4.0.1
 requests-toolbelt==0.7.1
 hypothesis==6.47.3
 gunicorn==20.1.0
-Django<=3.2.0
+Django<=3.2.14
 graphene-django==2.8.0
 graphene-sqlalchemy==2.3.0
 aniso8601==7.0.0
