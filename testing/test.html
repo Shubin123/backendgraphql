@@ -35,51 +35,54 @@
         }
         </script>
 
-
-
-
-
-
-      <script type="module">
-
-        // clicked1 -> registration
-      function clicked1() {
-
+<script type="module">
+  // script for registering input fields on testing page as 
+      // io -> registration
+function inputregistration() {
         var passwordinput = document.getElementById("input").value;
         var usernameinput = document.getElementById("input2").value;
         var emailinput = document.getElementById("input3").value;
-
-        console.log(registration(passwordinput, usernameinput, emailinput));
+        console.trace(registration(passwordinput, usernameinput, emailinput));
       }
-
-      window.clicked1 = clicked1;
-
-      // clicked2 -> verification
-
-  function clicked2() {
-
+      // io -> verification
+function inputverification() {
         var token = document.getElementById("input4").value;
-        console.log(verification(token));
+        console.trace(verification(token));
       }
 
-      window.clicked2 = clicked2;
+      // io -> resendverification
+function inputresendverification() {
+        var emailinput = document.getElementById("input5").value;
+        console.trace(resendverification(emailinput));
+      }
+
+      // io -> login
+function inputlogin(){
+      var logininput = document.getElementById("input6").value;
+      var passwordinput = document.getElementById("input7").value;
+      console.trace(login(logininput, passwordinput));
+}
+
+function inputchangeaccountinfo(){
+      var dropdown = document.getElementById("dropdown").value;
+      var input = document.getElementById("input8").value;
+      console.trace(changeaccountinfo(dropdown, input));
+  }
 
 
+  window.inputregistration = inputregistration;
+  window.inputverification = inputverification;
+  window.inputresendverification = inputresendverification;
+  window.inputlogin = inputlogin;
+  
 
-      import axios,* as others from "axios";
+  import axios,* as others from "axios";
 
-      function registration(password, username, email){
+function registration(password, username, email){
         var convertemail = email.toString()
         var convertuser = username.toString()
         var convertpass = password.toString()
-        
-
-            axios({
-            url: 'https://authoreteh.herokuapp.com/graphql',
-            method: 'post',
-            data: {
-              query:
-              `mutation register($emailed: String!, $usernamed: String!, $password1: String!, $password2: String!) {
+        var q = `mutation register($emailed: String!, $usernamed: String!, $password1: String!, $password2: String!) {
   register(email: $emailed username: $usernamed, password1: $password1, password2: $password2) {
     success
     errors
@@ -87,7 +90,13 @@
     token
     }
   }
-`,
+`
+            axios({
+            url: 'http://127.0.0.1:8000/graphql',
+            method: 'post',
+            data: {
+              query: q
+              ,
   variables: {
     emailed: convertemail,
     usernamed: convertuser,
@@ -96,22 +105,16 @@
   }},
 
         }).then((result) => {
-            // console.log(result["data"]]);
-            console.log(result);
-            console.log(result["data"]["data"])
-            console.log(result["data"]["data"]["register"]["errors"]);
+            console.trace(result);
+            console.trace(result["data"]["data"])
+            console.trace(result["data"]["data"]["register"]["errors"]);
           });
 }
 
-
-
-
-      function verification(tokeninput){
+function verification(tokeninput){
         var token = tokeninput.toString()
-        
-
             axios({
-            url: 'https://authoreteh.herokuapp.com/graphql',
+            url: 'http://127.0.0.1:8000/graphql',
             method: 'post',
             data: {
               query:
@@ -125,39 +128,95 @@
   variables: {
     tokenize: token
   }},
-
         }).then((result) => {
-            // console.log(result["data"]]);
-            console.log(result);
-            console.log(result["data"]["data"])
-            console.log(result["data"]["data"]["register"]["errors"]);
+            console.trace(result);
+            console.trace(result["data"]["data"])
+            console.trace(result["data"]["data"]["register"]["errors"]);
           });
-      }
+}
+
+function stringisemail(email){
+  var lowercaseofinput = String(email).toLowerCase()
+  var regexd = RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+  return regexd.test(lowercaseofinput)
+};
 
 
-
-
+function login(login, password){
+        var email = login.toString()
+        var passwordfield = password.toString()
+        // i tried everything else... 
+        if(stringisemail(email)){
+          var q = `mutation tokenAuth($loginfield: String, $passwordfield: String!) {
+                tokenAuth(email: $loginfield, password: $passwordfield) {
+              success
+              errors
+              }
+            }
+          `
+        }
+        else{
+          var q = `mutation tokenAuth($loginfield: String, $passwordfield: String!) {
+                tokenAuth(username: $loginfield, password: $passwordfield) {
+              success
+              errors
+              }
+            }
+          `
+        }
+            axios({
+            url: 'http://127.0.0.1:8000/graphql',
+            method: 'post',
+            data: {
+              query: q,
+  variables: {
+    loginfield: email,
+    passwordfield: passwordfield
+  }},
+        }).then((result) => {
+            console.trace(result);
+            console.trace(result["data"]["data"])
+            console.trace(result["data"]["errors"]);
+          });
+      
+} 
     </script>
 
     <fieldset>
       <legend>Registration</legend>
-
-      <p>Password</p><input id='input'></input>
-      <p>Username</p><input id='input2'></input>
-      <p>Email</p><input id='input3'></input>
-
-      <p></p><button onclick="window.clicked1()">Register</button>
+      <p>Password</p><input id='input'>
+      <p>Username</p><input id='input2'>
+      <p>Email</p><input id='input3'>
+      <p></p><button onclick="window.inputregistration()">Register</button>
     </fieldset>
 
-  <fieldset>
-    <legend>Verification</legend>
+    <fieldset>
+      <legend>Verification</legend>
+      <p>Please enter your token</p><input id='input4'>
+      <p></p><button onclick="window.inputverification()">Verify</button>
+      <p>* If you have not received a token please check the email you have entered *</p>
+      <p>* Or enter your email here to resend the verification token *</p>
+      <p>Please enter the email you've registered</p><input id='input5'>
+    <p></p><button onclick="window.inputresendverification()">Resend</button>
+    </fieldset>
+
+    <fieldset>
+    <legend>login</legend>
+    <p>Please enter your email or username</p><input id='input6'>
+    <p>Please enter your password</p><input id='input7'>
+    <p></p><button onclick="window.inputlogin()">Login</button>
     
+    <legend> 
+      select change to be made
+      <form> <select id="formselect"> <option value="1">update account</option>
+      <option value="2">update password</option>
+      <option value="3">delete account</option>
+      </select></form>
+      
+    </legend>
+    <p>Enter arguement</p> <input id='input8'>
 
-		<p>Please enter your token</p><input id='input4'></input>
-    <p></p><button onclick="window.clicked2()">Verify</button>
-    <p>* If you have not received a token please check the email you have entered *</p>
-  </fieldset>
-
+    </fieldset>
     </body>
 </html>
 

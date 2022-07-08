@@ -78,6 +78,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
             ],
         },
     },
@@ -141,6 +142,11 @@ GRAPHQL_JWT = {
         "graphql_auth.mutations.Register",
         "graphql_auth.mutations.VerifyAccount",
         "graphql_auth.mutations.ObtainJSONWebToken",
+        "graphql_auth.mutations.PasswordReset",
+        "graphql_auth.mutations.ResendActivationEmail",
+        "graphql_auth.mutations.SendPasswordResetEmail",
+        "graphql_auth.mutations.RevokeToken",
+        "graphql_auth.mutations.VerifyToken",
     ],
 }
 
