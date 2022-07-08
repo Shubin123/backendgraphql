@@ -1,4 +1,18 @@
 <!DOCTYPE html>
+<style>
+.developer_notice {
+  text-align: center;
+  outline: dashed;
+  padding: 10px;
+  color: red;
+  font-weight: bold;
+}
+</style>
+
+
+<div class="developer_notice">If you are reading this, you are looking at a development version</div>
+<p></p>
+
 <html>
     <head>
         <title>Example</title>
@@ -58,7 +72,7 @@
         var convertemail = email.toString()
         var convertuser = username.toString()
         var convertpass = password.toString()
-        
+
 
             axios({
             url: 'https://authoreteh.herokuapp.com/graphql',
@@ -94,7 +108,7 @@
 
       function verification(tokeninput){
         var token = tokeninput.toString()
-        
+
 
             axios({
             url: 'https://authoreteh.herokuapp.com/graphql',
@@ -124,25 +138,25 @@
 
 
     </script>
-      <p>registration test</p>
 
-		<button onclick="window.clicked1()">Click me</button>
+    <fieldset>
+      <legend>Registration</legend>
 
-		<input id='input'> password </input>
-		<input id='input2'> username </input>
-      <input id='input3'> email </input>
+      <p>Password</p><input id='input'></input>
+      <p>Username</p><input id='input2'></input>
+      <p>Email</p><input id='input3'></input>
 
-<p>verification test</p>
-<button onclick="window.clicked2()">Click me</button>
+      <p></p><button onclick="window.clicked1()">Register</button>
+    </fieldset>
+
+  <fieldset>
+    <legend>Verification</legend>
 
 
-		<input id='input4'> token </input>
-
-
+		<p>Please enter your token</p><input id='input4'></input>
+    <p></p><button onclick="window.clicked2()">Verify</button>
+    <p>* If you have not received a token please check the email you have entered *</p>
+  </fieldset>
 
     </body>
 </html>
-
-
-
-
