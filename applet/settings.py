@@ -142,7 +142,6 @@ AUTHENTICATION_BACKENDS = [
 
 GRAPHQL_JWT = {
     "JWT_VERIFY_EXPIRATION": True,
-
     # optional
     "JWT_LONG_RUNNING_REFRESH_TOKEN": True,
     # "JWT_REFRESH_EXPIRATION_DELTA": datetime.timedelta(days=7),
@@ -167,16 +166,13 @@ GRAPHQL_AUTH = {
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
 EMAIL_HOST = "smtp.titan.email"
-
-
 EMAIL_PORT = "587"
-
-
 DEFAULT_FROM_EMAIL = "me@shubin.email"
 EMAIL_HOST_USER = "me@shubin.email"
 EMAIL_HOST_PASSWORD = "R&b#H2h2yRm^%Tw"
+
+
 SECRET_KEY = os.getenv('SECRET_KEY', 'Optional default value')
 
 

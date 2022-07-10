@@ -1,17 +1,19 @@
+psycopg2==2.9.3
 numpy==1.22.0
 html5lib==1.1
 typing-extensions==4.0.1
 requests-toolbelt==0.7.1
 hypothesis==6.47.3
 gunicorn==20.1.0
+pyjwt==1.7.1
 Django<=3.2.14
+django-graphql-jwt==0.3.0
 django-graphql-auth==0.3.0
 django-cors-headers==3.13.0
 django-filter==2.4.0
-psycopg2==2.9.3
-graphene-django==3.0.0b7
-graphene-sqlalchemy>=3.0.0b1
-graphene==3.0.0b7
-graphql-core==3.1.2
-graphql-relay==3.1.0
+graphene-django==2.15.0
+graphene==2.1.8
+graphene-sqlalchemy<3
+graphql-core<3
+graphql-relay<3
 

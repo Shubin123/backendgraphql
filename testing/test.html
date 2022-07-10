@@ -45,15 +45,11 @@ function stringisemail(email){
   }
   // function that returns url used for test serve (offline) if THIS PAGE is offline or actual server if
 function checkurl(){
-  console.log(window.location.href)
   switch(window.location.href) {
    case 'http://127.0.0.1:9000/test.html': return 'http://127.0.0.1:8000/graphql'
-   case 'https://regal-choux-650d19.netlify.app/': return "https://authoreteh.herokuapp.com/graphql"
+   case 'https://regal-choux-650d19.netlify.app/test.html': return "https://authoreteh.herokuapp.com/graphql"
 }
 }
-console.log(checkurl())
-
-
   // functions for registering input fields on testing page as
       // io -> registration
 function inputregistration() {
@@ -191,6 +187,36 @@ function login(login, password, urlin){
           });
 
 }
+
+
+function resendverification(email, urlin){
+        var emailin = email.toString()
+        var urled = urlin.toString()
+        if (!(stringisemail(email))){
+          console.log("email is not a valid email")
+          return false
+        }else{
+            axios({
+            url: urled,
+            method: 'post',
+            data: {
+              query:
+              `mutation resendActivationEmail($emailfield: String!){
+                resendActivationEmail(email: $emailfield) {
+                  success
+                  errors
+                }}
+                  `,variables: {
+    emailfield: emailin
+  }},
+        }).then((result) => {
+            console.trace(result);
+            console.trace(result["data"]["data"])
+            console.trace(result["data"]["errors"]);
+          });
+        }
+        }
+
     </script>
 
     <fieldset>
@@ -216,14 +242,14 @@ function login(login, password, urlin){
     <p>Please enter your email or username</p><input id='input6'>
     <p>Please enter your password</p><input id='input7'>
     <p></p><button onclick="window.inputlogin()">Login</button>
-    
-    <legend> 
+
+    <legend>
       select change to be made
       <form> <select id="formselect"> <option value="1">update account</option>
       <option value="2">update password</option>
       <option value="3">delete account</option>
       </select></form>
-      
+
     </legend>
     <p>Enter arguement</p> <input id='input8'>
 
