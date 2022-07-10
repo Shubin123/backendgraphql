@@ -36,7 +36,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("graphql", csrf_exempt(jwt_cookie(GraphQLView.as_view(
-        graphiql=True)))),
+        graphiql=False)))),
     path("graphql2", csrf_exempt(jwt_cookie(GraphQLView.as_view(graphiql=True)))),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
