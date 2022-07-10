@@ -27,7 +27,7 @@
 # ]
 from django.contrib import admin
 from django.urls import path
-# from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from graphene_django.views import GraphQLView
 from graphql_jwt.decorators import jwt_cookie
@@ -35,7 +35,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("graphql", jwt_cookie(GraphQLView.as_view(graphiql=False))),
-    path("graphql2", jwt_cookie(GraphQLView.as_view(graphiql=True))),
+    path("graphql", csrf_exempt(jwt_cookie(GraphQLView.as_view(graphiql=False)))),
+    path("graphql2", csrf_exempt(jwt_cookie(GraphQLView.as_view(graphiql=True)))),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
