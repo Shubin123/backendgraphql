@@ -176,9 +176,7 @@ EMAIL_PORT = "587"
 
 DEFAULT_FROM_EMAIL = "me@shubin.email"
 EMAIL_HOST_USER = "me@shubin.email"
-
 EMAIL_HOST_PASSWORD = "R&b#H2h2yRm^%Tw"
-
 SECRET_KEY = os.getenv('SECRET_KEY', 'Optional default value')
 
 

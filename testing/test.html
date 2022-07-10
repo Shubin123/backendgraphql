@@ -36,49 +36,64 @@
         </script>
 
 <script type="module">
-  // script for registering input fields on testing page as 
+  // helper functions
+  // function that checks string is a email
+function stringisemail(email){
+  var lowercaseofinput = String(email).toLowerCase()
+  var regexd = RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+  return regexd.test(lowercaseofinput)
+  }
+  // function that returns url used for test serve (offline) if THIS PAGE is offline or actual server if
+function checkurl(){
+  console.log(window.location.href)
+  switch(window.location.href) {
+   case 'http://127.0.0.1:9000/test.html': return 'http://127.0.0.1:8000/graphql'
+   case 'https://regal-choux-650d19.netlify.app/': return "https://authoreteh.herokuapp.com/graphql"
+}
+}
+console.log(checkurl())
+
+
+  // functions for registering input fields on testing page as
       // io -> registration
 function inputregistration() {
         var passwordinput = document.getElementById("input").value;
         var usernameinput = document.getElementById("input2").value;
         var emailinput = document.getElementById("input3").value;
-        console.trace(registration(passwordinput, usernameinput, emailinput));
+        console.trace(registration(passwordinput, usernameinput, emailinput, checkurl()));
       }
       // io -> verification
 function inputverification() {
         var token = document.getElementById("input4").value;
-        console.trace(verification(token));
+        console.trace(verification(token, checkurl()));
       }
-
       // io -> resendverification
 function inputresendverification() {
         var emailinput = document.getElementById("input5").value;
-        console.trace(resendverification(emailinput));
+        console.trace(resendverification(emailinput, checkurl()));
       }
-
       // io -> login
 function inputlogin(){
       var logininput = document.getElementById("input6").value;
       var passwordinput = document.getElementById("input7").value;
-      console.trace(login(logininput, passwordinput));
+      console.trace(login(logininput, passwordinput, checkurl()));
 }
-
+      // io -> changeaccountinfo
 function inputchangeaccountinfo(){
       var dropdown = document.getElementById("dropdown").value;
       var input = document.getElementById("input8").value;
-      console.trace(changeaccountinfo(dropdown, input));
+      console.trace(changeaccountinfo(dropdown, input, checkurl()));
   }
-
 
   window.inputregistration = inputregistration;
   window.inputverification = inputverification;
   window.inputresendverification = inputresendverification;
   window.inputlogin = inputlogin;
-  
 
-  import axios,* as others from "axios";
+  //requests made to server
+import axios,* as others from "axios";
 
-function registration(password, username, email){
+function registration(password, username, email, urlin){
         var convertemail = email.toString()
         var convertuser = username.toString()
         var convertpass = password.toString()
@@ -91,8 +106,9 @@ function registration(password, username, email){
     }
   }
 `
+        var urled = urlin.toString()
             axios({
-            url: 'http://127.0.0.1:8000/graphql',
+            url: urled,
             method: 'post',
             data: {
               query: q
@@ -111,10 +127,11 @@ function registration(password, username, email){
           });
 }
 
-function verification(tokeninput){
+function verification(tokeninput, urlin){
         var token = tokeninput.toString()
+        var urled = urlin.toString()
             axios({
-            url: 'http://127.0.0.1:8000/graphql',
+            url: urled,
             method: 'post',
             data: {
               query:
@@ -135,17 +152,11 @@ function verification(tokeninput){
           });
 }
 
-function stringisemail(email){
-  var lowercaseofinput = String(email).toLowerCase()
-  var regexd = RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-  return regexd.test(lowercaseofinput)
-};
-
-
-function login(login, password){
+function login(login, password, urlin){
+  var urled = urlin.toString()
         var email = login.toString()
         var passwordfield = password.toString()
-        // i tried everything else... 
+        // i tried everything else...
         if(stringisemail(email)){
           var q = `mutation tokenAuth($loginfield: String, $passwordfield: String!) {
                 tokenAuth(email: $loginfield, password: $passwordfield) {
@@ -165,7 +176,7 @@ function login(login, password){
           `
         }
             axios({
-            url: 'http://127.0.0.1:8000/graphql',
+            url: urled,
             method: 'post',
             data: {
               query: q,
@@ -178,8 +189,8 @@ function login(login, password){
             console.trace(result["data"]["data"])
             console.trace(result["data"]["errors"]);
           });
-      
-} 
+
+}
     </script>
 
     <fieldset>
