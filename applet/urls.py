@@ -31,11 +31,12 @@ from django.urls import path
 from django.conf import settings
 from graphene_django.views import GraphQLView
 from graphql_jwt.decorators import jwt_cookie
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("graphql", GraphQLView.as_view(graphiql=False)),
     path("graphql2", jwt_cookie(GraphQLView.as_view(graphiql=True))),
 
-]
-#
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
