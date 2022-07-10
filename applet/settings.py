@@ -60,8 +60,9 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ORIGIN_WHITELIST = (
-    'http://127.0.0.1:9000', # testing server at port 9000
-    'https://regal-choux-650d19.netlify.app', # deployment
+    os.getenv('frontendwhitelist', 'http://127.0.0.1:9000')
+    # testing server at port 9000
+    # production url saved on heroku as cors header validation
 )
 
 ROOT_URLCONF = 'applet.urls'
@@ -133,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 GRAPHENE = {
     "SCHEMA": "applet.schema.schema",
     "MIDDLEWARE": ["graphql_jwt.middleware.JSONWebTokenMiddleware",
-                   'corsheaders.middleware.CorsMiddleware',],
+                   'corsheaders.middleware.CorsMiddleware'],
 }
 
 AUTHENTICATION_BACKENDS = [
