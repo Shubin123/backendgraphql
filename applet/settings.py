@@ -58,7 +58,7 @@ CORS_ORIGIN_ALLOW_ALL = False
 
 
 CORS_ORIGIN_WHITELIST = [
-    os.getenv('frontendwhitelist', 'http://127.0.0.1:9000')
+    os.getenv('frontendfilename', 'http://127.0.0.1:9000')
     # production url saved on heroku as cors header validation
 ]
 
