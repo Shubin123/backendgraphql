@@ -15,7 +15,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-r3314envafpx!srfpyl*9+qqd=^vv+0sq03df_wx%9a42_utma'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -90,18 +89,29 @@ WSGI_APPLICATION = 'applet.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': str(BASE_DIR / 'db.sqlite3'),
+#     }
+# }
+
+# database first argument calls heroku enviroment variables second defaults
+# to testing database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': str(BASE_DIR / 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('dbname', 'postgres'),
+        'USER': os.getenv('iiofwxsmjhzxye', 'postgres'),
+        'PASSWORD': os.getenv('dbpassword', 'y2x^p)szf$j^le)59yh#i22y('
+                                          '9#h6j#__)z+eqscmg(5w-uz2$'),
+        'HOST': os.getenv('dbhost', 'localhost'),
+        'PORT': os.getenv('dbport', 10000)
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
-
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -171,12 +181,7 @@ EMAIL_HOST_USER = "me@shubin.email"
 
 EMAIL_HOST_PASSWORD = "R&b#H2h2yRm^%Tw"
 
-
-
-
-
-
-
+SECRET_KEY = os.getenv('SECRET_KEY', 'Optional default value')
 
 
 # Internationalization
@@ -193,7 +198,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
-import os
+
 STATIC_ROOT= os.path.join(BASE_DIR, 'staticfiles')
 
 STATIC_URL = '/static/'
